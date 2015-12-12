@@ -12,8 +12,8 @@ namespace gromenia {
 		protected:
 			
 		private:
-			const unsigned int window_width = 1360;
-			const unsigned int window_height = 768;
+			const static unsigned int window_width = 1360;
+			const static unsigned int window_height = 768;
 			std::unordered_map<std::string, sf::Texture> texture_atlas;
 			sf::RenderWindow window;
 			sf::Font font;

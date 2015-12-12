@@ -4,6 +4,7 @@
 #include <SFML/Graphics.hpp>
 #include "game.hpp"
 #include "dawnbringer32.hpp"
+#include "button.hpp"
 
 namespace gromenia {
 	Game::Game() : window(sf::VideoMode(this->window_width, this->window_height), "The Legend of Gromenia", sf::Style::Titlebar | sf::Style::Close) {
@@ -37,25 +38,17 @@ namespace gromenia {
 		logo.setPosition(130, 100);
 		logo.setColor(DawnBringer32::White);
 		bool logo_up = false;
-		sf::Sprite play(this->get_texture("button_brown_up"));
-		static float button_size = 2;
-		play.setScale(button_size, button_size);
+		float button_size = 2.0f;
 		unsigned int button_left_indent_center = (this->window_width - button_size * this->get_texture("button_brown_up").getSize().x) / 2;
 		unsigned int button_top_indent = 300;
-		play.setPosition(button_left_indent_center, button_top_indent);
+		Button play("Play", this->get_texture("button_brown_up"), this->get_texture("button_brown_down"), sf::Vector2f(button_left_indent_center, button_top_indent), this->font, button_size);
 		button_top_indent += 20 + button_size * this->get_texture("button_brown_up").getSize().y;
 		unsigned int button_left_indent_left = (this->window_width - 2 * button_size * this->get_texture("button_brown_up").getSize().x - 50) / 2;
 		unsigned int button_left_indent_right = button_left_indent_left + button_size * this->get_texture("button_brown_up").getSize().x + 50;
-		sf::Sprite load(this->get_texture("button_brown_up"));
-		load.setScale(button_size, button_size);
-		load.setPosition(button_left_indent_left, button_top_indent);
-		sf::Sprite save(this->get_texture("button_brown_up"));
-		save.setScale(button_size, button_size);
-		save.setPosition(button_left_indent_right, button_top_indent);
+		Button load("Load", this->get_texture("button_brown_up"), this->get_texture("button_brown_down"), sf::Vector2f(button_left_indent_left, button_top_indent), this->font, button_size);
+		Button save("Save", this->get_texture("button_brown_up"), this->get_texture("button_brown_down"), sf::Vector2f(button_left_indent_right, button_top_indent), this->font, button_size);
 		button_top_indent += 20 + button_size * this->get_texture("button_brown_up").getSize().y;
-		sf::Sprite exit(this->get_texture("button_brown_up"));
-		exit.setScale(button_size, button_size);
-		exit.setPosition(button_left_indent_center, button_top_indent);
+		Button exit("Exit", this->get_texture("button_brown_up"), this->get_texture("button_brown_down"), sf::Vector2f(button_left_indent_center, button_top_indent), this->font, button_size);
 		while (this->window.isOpen()) {
 			sf::Event event;
 			while (this->window.pollEvent(event)) {
@@ -83,10 +76,10 @@ namespace gromenia {
 			}
 			this->window.clear(DawnBringer32::Viking);
 			this->window.draw(logo);
-			this->window.draw(play);
-			this->window.draw(load);
-			this->window.draw(save);
-			this->window.draw(exit);
+			play.draw(this->window);
+			load.draw(this->window);
+			save.draw(this->window);
+			exit.draw(this->window);
 			this->window.display();
 			
 		}
