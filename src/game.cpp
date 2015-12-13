@@ -19,6 +19,8 @@ namespace gromenia {
 		this->load_texture("button_blue_down", "protomedia/sprites/buttonLong_blue_pressed.png");
 		this->load_texture("button_gray_up", "protomedia/sprites/buttonLong_grey.png");
 		this->load_texture("button_gray_down", "protomedia/sprites/buttonLong_grey_pressed.png");
+		this->load_texture("island", "protomedia/sprites/island.png");
+		this->load_texture("arrow", "protomedia/icons/Game icons (base)/PNG/White/2x/arrowDown.png");
 		this->font.loadFromFile("protomedia/fonts/kenpixel.ttf");
 		this->set_state(new GameStateMainMenu(this, &this->font));
 	}
@@ -67,7 +69,7 @@ namespace gromenia {
 	
 	void Game::pop_state() {
 		if (!this->state_stack.empty()) {
-			delete this->state_stack.top();
+			//delete this->state_stack.top();
 			this->state_stack.pop();
 		}
 		return;

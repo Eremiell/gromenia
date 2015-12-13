@@ -8,6 +8,8 @@
 #include "game_state.hpp"
 
 namespace gromenia {
+	enum class Area {FOREST, MOUNTAINS, RIVER, CITY};
+	
 	class GameState;
 	
 	class Game {
