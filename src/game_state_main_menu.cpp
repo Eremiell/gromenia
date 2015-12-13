@@ -25,6 +25,42 @@ namespace gromenia {
 				case (sf::Event::Closed):
 					this->game->window.close();
 					break;
+				case sf::Event::KeyPressed:
+					switch (event.key.code) {
+						case sf::Keyboard::Left:
+						case sf::Keyboard::A:
+							if (this->button_selected != nullptr) {
+								this->button_selected->go_up();
+							}
+							this->load.go_down();
+							this->button_selected = &this->load;
+							break;
+						case sf::Keyboard::Right:
+						case sf::Keyboard::D:
+							if (this->button_selected != nullptr) {
+								this->button_selected->go_up();
+							}
+							this->save.go_down();
+							this->button_selected = &this->save;
+							break;
+						case sf::Keyboard::Up:
+						case sf::Keyboard::W:
+							if (this->button_selected != nullptr) {
+								this->button_selected->go_up();
+							}
+							this->play.go_down();
+							this->button_selected = &this->play;
+							break;
+						case sf::Keyboard::Down:
+						case sf::Keyboard::S:
+							if (this->button_selected != nullptr) {
+								this->button_selected->go_up();
+							}
+							this->exit.go_down();
+							this->button_selected = &this->exit;
+							break;
+					}
+					break;
 			}
 		}
 		if (this->logo_up) {

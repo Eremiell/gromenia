@@ -25,6 +25,7 @@ namespace gromenia {
 			Button load;
 			Button save;
 			Button exit;
+			Button *button_selected = nullptr;
 	};
 }
 
