@@ -6,11 +6,13 @@
 #include <SFML/Graphics.hpp>
 #include <stack>
 #include "game_state.hpp"
+#include "tile_manager.hpp"
 
 namespace gromenia {
 	enum class Area {FOREST, MOUNTAINS, RIVER, CITY};
 	
 	class GameState;
+	class TileManager;
 	
 	class Game {
 		public:
@@ -25,6 +27,7 @@ namespace gromenia {
 			void set_state(GameState *state);
 			void pop_state();
 			sf::RenderWindow window;
+			TileManager *tile_manager;
 			//void switch_state(GameState *state);
 		protected:
 			

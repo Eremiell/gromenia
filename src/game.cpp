@@ -7,6 +7,7 @@
 #include "dawnbringer32.hpp"
 #include "button.hpp"
 #include "game_state_main_menu.hpp"
+#include "tile_manager.hpp"
 
 namespace gromenia {
 	Game::Game() : window(sf::VideoMode(this->window_width, this->window_height), "The Legend of Gromenia", sf::Style::Titlebar | sf::Style::Close) {
@@ -23,12 +24,14 @@ namespace gromenia {
 		this->load_texture("arrow", "protomedia/icons/Game icons (base)/PNG/White/2x/arrowDown.png");
 		this->font.loadFromFile("protomedia/fonts/kenpixel.ttf");
 		this->set_state(new GameStateMainMenu(this, &this->font));
+		this->tile_manager = new TileManager(this);
 	}
 	
 	Game::~Game() {
 		while (!this->state_stack.empty()) {
 			this->pop_state();
 		}
+		delete this->tile_manager;
 	}
 	
 	sf::Texture& Game::get_texture(std::string label) {
