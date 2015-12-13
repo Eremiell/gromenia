@@ -1,3 +1,6 @@
+#ifndef DAWNBRINGER32_HPP
+#define DAWNBRINGER32_HPP
+
 #include <SFML/Graphics.hpp>
 
 namespace DawnBringer32 {
@@ -34,3 +37,5 @@ namespace DawnBringer32 {
 	const static sf::Color RainForest(143, 151, 74);
 	const static sf::Color Stinger(138, 111, 48);
 }
+
+#endif

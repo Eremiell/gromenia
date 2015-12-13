@@ -2,9 +2,11 @@
 #include <string>
 #include <utility>
 #include <SFML/Graphics.hpp>
+#include <SFML/Window.hpp>
 #include "game.hpp"
 #include "dawnbringer32.hpp"
 #include "button.hpp"
+#include "game_state_main_menu.hpp"
 
 namespace gromenia {
 	Game::Game() : window(sf::VideoMode(this->window_width, this->window_height), "The Legend of Gromenia", sf::Style::Titlebar | sf::Style::Close) {
@@ -18,9 +20,16 @@ namespace gromenia {
 		this->load_texture("button_gray_up", "protomedia/sprites/buttonLong_grey.png");
 		this->load_texture("button_gray_down", "protomedia/sprites/buttonLong_grey_pressed.png");
 		this->font.loadFromFile("protomedia/fonts/kenpixel.ttf");
+		this->set_state(new GameStateMainMenu(this, &this->font));
 	}
 	
-	const sf::Texture& Game::get_texture(std::string label) {
+	Game::~Game() {
+		while (!this->state_stack.empty()) {
+			this->pop_state();
+		}
+	}
+	
+	sf::Texture& Game::get_texture(std::string label) {
 		return this->texture_atlas.at(label);
 	}
 	
@@ -34,54 +43,32 @@ namespace gromenia {
 	}
 	
 	void Game::game_loop() {
-		sf::Text logo("The Legend of Gromenia", this->font, 75);
-		logo.setPosition(130, 100);
-		logo.setColor(DawnBringer32::White);
-		bool logo_up = false;
-		float button_size = 2.0f;
-		unsigned int button_left_indent_center = (this->window_width - button_size * this->get_texture("button_brown_up").getSize().x) / 2;
-		unsigned int button_top_indent = 300;
-		Button play("Play", this->get_texture("button_brown_up"), this->get_texture("button_brown_down"), sf::Vector2f(button_left_indent_center, button_top_indent), this->font, button_size);
-		button_top_indent += 20 + button_size * this->get_texture("button_brown_up").getSize().y;
-		unsigned int button_left_indent_left = (this->window_width - 2 * button_size * this->get_texture("button_brown_up").getSize().x - 50) / 2;
-		unsigned int button_left_indent_right = button_left_indent_left + button_size * this->get_texture("button_brown_up").getSize().x + 50;
-		Button load("Load", this->get_texture("button_brown_up"), this->get_texture("button_brown_down"), sf::Vector2f(button_left_indent_left, button_top_indent), this->font, button_size);
-		Button save("Save", this->get_texture("button_brown_up"), this->get_texture("button_brown_down"), sf::Vector2f(button_left_indent_right, button_top_indent), this->font, button_size);
-		button_top_indent += 20 + button_size * this->get_texture("button_brown_up").getSize().y;
-		Button exit("Exit", this->get_texture("button_brown_up"), this->get_texture("button_brown_down"), sf::Vector2f(button_left_indent_center, button_top_indent), this->font, button_size);
-		while (this->window.isOpen()) {
-			sf::Event event;
-			while (this->window.pollEvent(event)) {
-				switch (event.type) {
-					case (sf::Event::Closed):
-						this->window.close();
-						break;
-				}
-			}
-			if (logo_up) {
-				if (logo.getPosition().y < 120) {
-					logo.move(0, 2);
-				}
-				else {
-					logo_up = false;
-				}
-			}
-			else {
-				if (logo.getPosition().y > 80) {
-					logo.move(0, -2);
-				}
-				else {
-					logo_up = true;
-				}
-			}
-			this->window.clear(DawnBringer32::Viking);
-			this->window.draw(logo);
-			play.draw(this->window);
-			load.draw(this->window);
-			save.draw(this->window);
-			exit.draw(this->window);
-			this->window.display();
-			
+		while (this->window.isOpen() && !this->state_stack.empty()) {
+			this->get_state()->parse_events();
+			this->get_state()->draw();
+		}
+		if (this->window.isOpen() && this->state_stack.empty()) {
+			this->window.close();
+		}
+		return;
+	}
+	
+	GameState* Game::get_state() {
+		if (!this->state_stack.empty()) {
+			return this->state_stack.top();
+		}
+		return nullptr;
+	}
+	
+	void Game::set_state(GameState *state) {
+		this->state_stack.push(state);
+		return;
+	}
+	
+	void Game::pop_state() {
+		if (!this->state_stack.empty()) {
+			delete this->state_stack.top();
+			this->state_stack.pop();
 		}
 		return;
 	}
